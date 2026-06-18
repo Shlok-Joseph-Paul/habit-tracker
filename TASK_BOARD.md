@@ -227,3 +227,230 @@ Verify the tiny Habit Tracker manually against the spec and architecture docs, t
 3. Toggled a habit and confirmed the visible status changed from `Not completed` to `Complete`
 4. Reloaded the page and confirmed the toggled habit remained completed
 5. Confirmed the browser requested `src/styles.css` and the local server returned `404`
+
+## Ticket 6: Progress summary helpers
+
+### Goal
+Add a small pure-logic module for derived progress data so the app can show completion counts and percentages without mixing presentation logic into the main app file.
+
+### Files Likely Touched
+- `src/progress.js`
+
+### Files Not To Touch
+- `index.html`
+- `src/app.js`
+- `src/habits.js`
+- `src/storage.js`
+- `src/styles.css`
+- `SPEC.md`
+- `ARCHITECTURE.md`
+- `AGENTS.md`
+- `PROJECT_STATE.md`
+
+### Acceptance Criteria
+- `src/progress.js` exports pure helpers for counting completed habits and total habits
+- The module exports a helper for computing completion percentage or summary text input data
+- The module handles an empty habit list safely without divide-by-zero behavior
+- The module does not access the DOM or `localStorage`
+- The module uses the current shared state shape without redefining it
+
+### Manual Validation Steps
+1. Open `src/progress.js`
+2. Confirm the module exports only pure derived-state helpers
+3. Confirm the helpers return expected values for zero, partial, and fully completed habit lists
+4. Confirm the file does not import browser-specific APIs
+
+## Ticket 7: Completion history graph
+
+### Goal
+Add a graph at the bottom of the Habit Tracker that shows how many habits were completed on each calendar day.
+
+### Files Likely Touched
+- `index.html`
+- `src/app.js`
+
+### Files Not To Touch
+- `src/habits.js`
+- `src/storage.js`
+- `src/styles.css`
+- `src/progress.js`
+- `SPEC.md`
+- `ARCHITECTURE.md`
+- `AGENTS.md`
+- `PROJECT_STATE.md`
+
+### Acceptance Criteria
+- The page includes a dedicated graph region at the bottom of the app shell
+- `src/app.js` renders a calendar-day completion history using the established app state plus any persisted history already available
+- The graph clearly shows how many habits were completed for each tracked day
+- The graph updates when current-day habit completion changes
+- The implementation uses stable IDs or classes that styling can target later without changing behavior
+
+### Manual Validation Steps
+1. Open the app in a browser
+2. Confirm a graph region is visible at the bottom of the page
+3. Toggle one or more habits and confirm the current day value updates in the graph
+4. Reload the page and confirm the graph still reflects persisted current-day data
+
+## Ticket 8: Historical storage and migration guardrails
+
+### Goal
+Extend persistence to support calendar-day completion history, while also versioning the saved payload and handling older or malformed saved shapes explicitly.
+
+### Files Likely Touched
+- `src/storage.js`
+
+### Files Not To Touch
+- `index.html`
+- `src/app.js`
+- `src/habits.js`
+- `src/styles.css`
+- `src/progress.js`
+- `SPEC.md`
+- `ARCHITECTURE.md`
+- `AGENTS.md`
+- `PROJECT_STATE.md`
+
+### Acceptance Criteria
+- `src/storage.js` defines a storage schema version alongside the storage key
+- The persisted format can represent completion totals by calendar day
+- The module validates saved payloads before returning them to the app
+- Older or incompatible saved data fails safely without crashing the app
+- The storage API remains small and compatible with the current app integration surface
+- Migration or fallback behavior is documented inline where it would otherwise be unclear
+
+### Manual Validation Steps
+1. Open `src/storage.js`
+2. Confirm a schema version constant is defined and used consistently
+3. Confirm the persisted shape can store completion totals keyed by calendar day
+4. Confirm load behavior safely rejects incompatible or malformed saved payloads
+5. Confirm valid current-format state still serializes and loads successfully
+
+## Ticket 9: Visual polish and responsive refinement
+
+### Goal
+Improve the visual design of the current tracker, including the new completion history graph area, while preserving existing behavior and file ownership boundaries.
+
+### Files Likely Touched
+- `src/styles.css`
+
+### Files Not To Touch
+- `index.html`
+- `src/app.js`
+- `src/habits.js`
+- `src/storage.js`
+- `src/progress.js`
+- `SPEC.md`
+- `ARCHITECTURE.md`
+- `AGENTS.md`
+- `PROJECT_STATE.md`
+
+### Acceptance Criteria
+- The app has a cohesive visual system for the shell, habit items, and completion history graph
+- The layout remains readable on both desktop and narrow mobile widths
+- Completed habits have a clear visual distinction from incomplete ones
+- Focus states remain visible for keyboard users
+- Styling applies without requiring JavaScript or markup changes outside selectors already defined by the UI work
+
+### Manual Validation Steps
+1. Open the app in a browser
+2. Confirm the graph and habit list are clearly separated visually
+3. Confirm completed and incomplete habits are easy to distinguish
+4. Resize to a narrow width and confirm the layout remains usable
+5. Tab through controls and confirm visible focus treatment
+
+## Ticket 10: Enhancement QA and regression testing
+
+### Goal
+Run a second full manual QA pass covering the enhancement-phase tracker, including completion history graph behavior, storage resilience, and responsive usability.
+
+### Files Likely Touched
+- `TASK_BOARD.md`
+- `PROJECT_STATE.md`
+
+### Files Not To Touch
+- `index.html`
+- `src/app.js`
+- `src/habits.js`
+- `src/storage.js`
+- `src/styles.css`
+- `src/progress.js`
+- `SPEC.md`
+- `ARCHITECTURE.md`
+- `AGENTS.md`
+
+### Acceptance Criteria
+- A manual regression checklist covers base tracking behavior plus the new enhancement work
+- QA verifies toggling, reload persistence, graph updates, and responsive behavior
+- Any discovered defects are captured as follow-up tasks instead of being mixed into implementation files
+- Project status notes clearly reflect what enhancement tickets have been validated
+
+### Manual Validation Steps
+1. Open the app in a browser
+2. Toggle habits and confirm the graph updates correctly for the current calendar day
+3. Refresh the page and confirm both habit state and the graph remain correct
+4. Test with browser storage already populated and confirm the app still initializes cleanly
+5. Review the interface at desktop and mobile widths
+6. Record any defects or follow-up work in project documentation
+
+## Enhancement Parallelization Notes
+- Ticket 6 owns only `src/progress.js`, so it can proceed in parallel with all other enhancement tickets
+- Ticket 7 owns the enhancement integration surface in `index.html` and `src/app.js`
+- Ticket 8 remains isolated to `src/storage.js` and should not modify rendering behavior
+- Tickets 7 and 8 should share one documented contract for day-by-day history data so the graph can render multiple calendar days without reopening file boundaries
+- Ticket 9 remains isolated to `src/styles.css` and should rely only on selectors provided by Ticket 7
+- Ticket 10 should run after Tickets 6 through 9 produce a reviewable enhancement build
+
+## Enhancement Completion Notes
+
+### Ticket 7: Completion history graph
+- Status: Complete
+- Added a dedicated completion history region to `index.html` at the bottom of the app shell
+- Updated `src/app.js` to maintain calendar-day completion totals in app state and render them into a graph-friendly list
+- Ensured the graph updates immediately when current-day habit completion changes and re-renders after reload
+
+### Ticket 7: Validation Steps Run
+1. Opened the app in a browser
+2. Confirmed the completion history section rendered below the habit list
+3. Toggled the `Drink water` habit and confirmed the graph value changed from `0/3` to `1/3`
+4. Reloaded the page and confirmed the graph still showed the persisted current-day value
+
+### Ticket 8: Historical storage and migration guardrails
+- Status: Complete
+- Added `HABIT_TRACKER_STORAGE_SCHEMA_VERSION` and wrapped persisted saves in a versioned payload
+- Extended the saved shape to include per-day completion history while keeping the `loadState()` and `saveState()` API surface unchanged
+- Added safe fallback handling for legacy unversioned saves plus safe rejection of malformed or incompatible payloads
+
+### Ticket 8: Validation Steps Run
+1. Opened `src/storage.js`
+2. Confirmed the schema version constant is defined and used in the saved payload
+3. Verified the persisted shape can hold history keyed by calendar day
+4. Exercised the module with valid versioned data, legacy unversioned data, incompatible versions, and malformed JSON
+5. Confirmed valid current-format state saves and loads successfully while incompatible or malformed payloads return `null`
+
+### Ticket 9: Visual polish and responsive refinement
+- Status: Complete
+- Extended `src/styles.css` to style the completion history graph and align it with the rest of the tracker shell
+- Added a clearer completed-habit visual state using the existing checkbox selector structure
+- Preserved responsive readability for both the habit list and the history graph
+
+### Ticket 9: Validation Steps Run
+1. Opened the app in a browser
+2. Confirmed the graph and habit list render as distinct, visually cohesive sections
+3. Confirmed completed and incomplete habits are easy to distinguish after toggling a habit
+4. Checked a narrow mobile viewport and confirmed the layout remained readable and usable
+5. Confirmed the visible focus styling rule remains present on `.habit-checkbox:focus-visible`
+
+### Ticket 10: Enhancement QA and regression testing
+- Status: Complete
+- Ran a second enhancement-focused QA pass covering graph rendering, toggle updates, reload persistence, storage compatibility paths, and responsive behavior
+- Updated `PROJECT_STATE.md` and `TASK_BOARD.md` to reflect the validated enhancement tickets
+- No functional defects were discovered during this QA pass
+
+### Ticket 10: Validation Steps Run
+1. Opened the app in a browser at desktop width and confirmed the graph, habit list, and persisted state rendered correctly
+2. Toggled a habit and confirmed both the visible status and graph value updated for the current calendar day
+3. Reloaded the page and confirmed both habit state and the graph remained correct
+4. Validated browser-storage compatibility by exercising the storage module with existing valid data, legacy data, incompatible versions, and malformed JSON
+5. Reviewed the interface at mobile width and confirmed the layout remained usable
+6. Recorded the result as no new defects and no mandatory follow-up bug tickets

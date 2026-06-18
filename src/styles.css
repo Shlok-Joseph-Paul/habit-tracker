@@ -27,10 +27,13 @@ body {
   width: min(100%, 52rem);
   margin: 0 auto;
   padding: 2rem 1rem 3rem;
+  display: grid;
+  gap: 1.25rem;
 }
 
 #app-header,
-#habit-section {
+#habit-section,
+#completion-history-section {
   background: var(--panel-background);
   border: 1px solid var(--panel-border);
   border-radius: 1.5rem;
@@ -70,23 +73,28 @@ body {
 }
 
 #main-content {
-  margin-top: 1.25rem;
+  display: grid;
+  gap: 1.25rem;
 }
 
-#habit-section {
+#habit-section,
+#completion-history-section {
   padding: 1.5rem;
 }
 
-#habit-list-header {
+#habit-list-header,
+#completion-history-header {
   margin-bottom: 1.25rem;
 }
 
-#habit-list-title {
+#habit-list-title,
+#completion-history-title {
   margin: 0;
   font-size: 1.35rem;
 }
 
-#habit-list-header p {
+#habit-list-header p,
+#completion-history-header p {
   margin: 0.4rem 0 0;
   line-height: 1.5;
 }
@@ -108,6 +116,8 @@ body {
   border: 1px solid #e2d9ca;
   border-radius: 1rem;
   background: #fffdf9;
+  transition: border-color 160ms ease, background-color 160ms ease,
+    transform 160ms ease;
 }
 
 .habit-toggle {
@@ -117,6 +127,15 @@ body {
   min-width: 0;
   cursor: pointer;
   font-weight: 600;
+}
+
+.habit-list-item:hover {
+  transform: translateY(-1px);
+}
+
+.habit-list-item:has(.habit-checkbox:checked) {
+  border-color: #bfd6c4;
+  background: #f5fbf6;
 }
 
 .habit-checkbox {
@@ -139,6 +158,10 @@ body {
   line-height: 1.4;
 }
 
+.habit-list-item:has(.habit-checkbox:checked) .habit-name {
+  color: var(--accent);
+}
+
 .habit-status {
   flex-shrink: 0;
   padding: 0.35rem 0.7rem;
@@ -148,13 +171,64 @@ body {
   font-weight: 600;
 }
 
+.habit-list-item:has(.habit-checkbox:checked) .habit-status {
+  color: var(--accent);
+  background: #dceee0;
+}
+
+#completion-history-graph {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.completion-history-item {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 8rem) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.completion-history-date,
+.completion-history-value {
+  font-size: 0.95rem;
+}
+
+.completion-history-date {
+  font-weight: 600;
+}
+
+.completion-history-value {
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.completion-history-bar-track {
+  position: relative;
+  overflow: hidden;
+  min-height: 0.95rem;
+  border-radius: 999px;
+  background: #ece4d6;
+}
+
+.completion-history-bar-fill {
+  display: block;
+  width: max(calc(var(--completion-ratio, 0) * 100%), 0.6rem);
+  min-height: 0.95rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #4b845d 0%, #7fb08f 100%);
+}
+
 @media (max-width: 640px) {
   #app-shell {
     padding: 1.25rem 0.85rem 2rem;
   }
 
   #app-header,
-  #habit-section {
+  #habit-section,
+  #completion-history-section {
     border-radius: 1.15rem;
     padding: 1.1rem;
   }
@@ -166,5 +240,14 @@ body {
 
   .habit-status {
     align-self: flex-start;
+  }
+
+  .completion-history-item {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  .completion-history-bar-track {
+    order: 3;
   }
 }
