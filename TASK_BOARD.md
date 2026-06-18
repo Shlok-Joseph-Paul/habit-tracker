@@ -158,3 +158,17 @@ Verify the tiny Habit Tracker manually against the spec and architecture docs, t
 - Tickets 2 and 3 can proceed in parallel because they target separate modules with a predefined shared state shape
 - Ticket 4 can proceed in parallel after the shell selectors are documented in Ticket 1
 - Ticket 5 should run after implementation tickets have produced a reviewable app build
+
+## Completion Notes
+
+### Ticket 1: UI skeleton
+- Status: Complete
+- Implemented `index.html` with the required page shell, title, description, and stable habit list hooks
+- Implemented `src/app.js` as the browser entry point with isolated temporary habit rendering
+- Left data model, persistence, and styling work for Tickets 2, 3, and 4 respectively
+
+### Ticket 1: Validation Steps Run
+1. Open `index.html` in a browser
+2. Confirm the document title is `Habit Tracker`
+3. Confirm the heading, description, and habit list region render
+4. Confirm three temporary habit items appear without console initialization errors

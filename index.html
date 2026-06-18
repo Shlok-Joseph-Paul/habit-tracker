@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Tracker</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div id="app-shell">
+      <header id="app-header">
+        <p>Habit Tracker</p>
+        <h1 id="page-title">Daily Habit Tracker</h1>
+        <p id="app-description">
+          Track a few daily habits and see what you have completed today.
+        </p>
+      </header>
+
+      <main id="main-content">
+        <section id="habit-section" aria-labelledby="habit-list-title">
+          <div id="habit-list-header">
+            <h2 id="habit-list-title">Today&apos;s habits</h2>
+            <p>Temporary list rendering is in place until the shared data model lands.</p>
+          </div>
+          <div id="habit-list-region" aria-live="polite">
+            <ul id="habit-list"></ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
