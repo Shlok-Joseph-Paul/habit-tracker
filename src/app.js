@@ -1,10 +1,28 @@
-const temporaryHabits = [
-  { id: "temp-drink-water", name: "Drink water", completed: false },
-  { id: "temp-stretch", name: "Stretch", completed: false },
-  { id: "temp-read", name: "Read 10 minutes", completed: false },
-];
+import {
+  createDefaultState,
+  getCurrentDateString,
+  toggleHabitCompletion,
+} from "./habits.js";
+import { loadState, saveState } from "./storage.js";
 
-function renderTemporaryHabits(habits) {
+let appState = createInitialState();
+
+function createInitialState() {
+  const savedState = loadState();
+  const currentDate = getCurrentDateString();
+
+  if (!savedState) {
+    return createDefaultState(currentDate);
+  }
+
+  if (savedState.date !== currentDate) {
+    return createDefaultState(currentDate);
+  }
+
+  return savedState;
+}
+
+function renderHabits(state) {
   const habitList = document.querySelector("#habit-list");
 
   if (!habitList) {
@@ -12,10 +30,19 @@ function renderTemporaryHabits(habits) {
   }
 
   habitList.replaceChildren(
-    ...habits.map((habit) => {
+    ...state.habits.map((habit) => {
       const item = document.createElement("li");
       item.className = "habit-list-item";
       item.dataset.habitId = habit.id;
+
+      const label = document.createElement("label");
+      label.className = "habit-toggle";
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "habit-checkbox";
+      checkbox.dataset.habitId = habit.id;
+      checkbox.checked = habit.completed;
 
       const name = document.createElement("span");
       name.className = "habit-name";
@@ -25,14 +52,36 @@ function renderTemporaryHabits(habits) {
       status.className = "habit-status";
       status.textContent = habit.completed ? "Complete" : "Not completed";
 
-      item.append(name, status);
+      label.append(checkbox, name);
+      item.append(label, status);
       return item;
     }),
   );
 }
 
+function handleHabitToggle(event) {
+  const target = event.target;
+
+  if (!(target instanceof HTMLInputElement) || !target.matches(".habit-checkbox")) {
+    return;
+  }
+
+  appState = toggleHabitCompletion(appState, target.dataset.habitId);
+  saveState(appState);
+  renderHabits(appState);
+}
+
 function initializeApp() {
-  renderTemporaryHabits(temporaryHabits);
+  const habitList = document.querySelector("#habit-list");
+
+  if (!habitList) {
+    throw new Error("Missing #habit-list mount point.");
+  }
+
+  habitList.addEventListener("change", handleHabitToggle);
+
+  saveState(appState);
+  renderHabits(appState);
 }
 
 initializeApp();
