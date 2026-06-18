@@ -87,6 +87,69 @@ body {
   margin-bottom: 1.25rem;
 }
 
+#habit-form {
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #e2d9ca;
+  border-radius: 1rem;
+  background: #fffaf1;
+}
+
+#habit-form-title {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+#habit-form-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+#habit-name-label {
+  grid-column: 1 / -1;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+#habit-name-input,
+#habit-submit-button {
+  border-radius: 0.85rem;
+  font: inherit;
+}
+
+#habit-name-input {
+  min-width: 0;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #d6cab8;
+  background: #ffffff;
+  color: var(--text-primary);
+}
+
+#habit-name-input::placeholder {
+  color: #7b8579;
+}
+
+#habit-name-input:focus-visible,
+#habit-submit-button:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+#habit-submit-button {
+  padding: 0.8rem 1rem;
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: #f8fbf8;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+#habit-submit-button:hover {
+  filter: brightness(1.05);
+}
+
 #habit-list-title,
 #completion-history-title {
   margin: 0;
@@ -249,5 +312,9 @@ body {
 
   .completion-history-bar-track {
     order: 3;
+  }
+
+  #habit-form-controls {
+    grid-template-columns: 1fr;
   }
 }

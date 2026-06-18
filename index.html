@@ -22,6 +22,21 @@
             <h2 id="habit-list-title">Today&apos;s habits</h2>
             <p>Mark each habit complete as you work through today&apos;s routine.</p>
           </div>
+          <form id="habit-form" aria-labelledby="habit-form-title">
+            <h3 id="habit-form-title">Add a daily task</h3>
+            <div id="habit-form-controls">
+              <label id="habit-name-label" for="habit-name-input">Task name</label>
+              <input
+                id="habit-name-input"
+                name="habitName"
+                type="text"
+                maxlength="60"
+                placeholder="Example: Journal for 5 minutes"
+                required
+              />
+              <button id="habit-submit-button" type="submit">Add task</button>
+            </div>
+          </form>
           <div id="habit-list-region" aria-live="polite">
             <ul id="habit-list"></ul>
           </div>

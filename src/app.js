@@ -1,4 +1,5 @@
 import {
+  addHabit,
   createDefaultState,
   getCurrentDateString,
   toggleHabitCompletion,
@@ -147,14 +148,49 @@ function handleHabitToggle(event) {
   renderCompletionHistory(appState);
 }
 
+function handleHabitSubmit(event) {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+
+  if (!(form instanceof HTMLFormElement)) {
+    return;
+  }
+
+  const input = form.querySelector("#habit-name-input");
+
+  if (!(input instanceof HTMLInputElement)) {
+    throw new Error("Missing #habit-name-input field.");
+  }
+
+  const nextState = withCurrentDayHistory(addHabit(appState, input.value));
+
+  if (nextState === appState) {
+    return;
+  }
+
+  appState = nextState;
+  saveState(appState);
+  renderHabits(appState);
+  renderCompletionHistory(appState);
+  form.reset();
+  input.focus();
+}
+
 function initializeApp() {
   const habitList = document.querySelector("#habit-list");
+  const habitForm = document.querySelector("#habit-form");
 
   if (!habitList) {
     throw new Error("Missing #habit-list mount point.");
   }
 
+  if (!(habitForm instanceof HTMLFormElement)) {
+    throw new Error("Missing #habit-form.");
+  }
+
   habitList.addEventListener("change", handleHabitToggle);
+  habitForm.addEventListener("submit", handleHabitSubmit);
 
   saveState(appState);
   renderHabits(appState);
